@@ -4,13 +4,13 @@ import InputSearch from '@/components/InputSearch.vue'
 import ProfileCard from '@/components/ProfileCard.vue'
 import ChatItem from '@/components/ChatItem.vue'
 import { ref, reactive } from 'vue'
+import useProfileStore from '@/stores/profile.js'
+import useChannelStore from '@/stores/channels.js'
+
+const profileStore = useProfileStore()
+const channelStore = useChannelStore()
 
 const search = ref('')
-const profile = reactive({
-  username: 'Diana Nerd',
-  status: 'active',
-  avatar: '/avatars/avatar.jpg'
-})
 const channels = reactive([
   { id: 1, name: 'General', messages: 27 },
   { id: 2, name: 'Emergencias', messages: null },
@@ -26,14 +26,14 @@ const channels = reactive([
   <aside>
     <InputSearch v-model="search" />
     <ProfileCard
-      :avatar="profile.avatar"
-      :username="profile.username"
-      :status="profile.status"
+      :avatar="profileStore.avatar"
+      :username="profileStore.username"
+      :status="profileStore.status"
     />
     <RouterLink to="/" class="channels-title">Canales <Icon icon="carbon:hashtag" /></RouterLink>
     <div class="channels">
       <ChatItem
-        v-for="channel in channels"
+        v-for="channel in channelStore.getChannels(search)"
         :key="channel.id"
         :id="channel.id"
         :name="channel.name"
